@@ -1,0 +1,158 @@
+import java.util.Scanner;
+//Autor: Subia Huaicane Edson Fabricio
+//Tiempo: 40 minutos
+//Colaborador: Mi persona
+//Version del ahorcado al 100% v.2.0.1
+public class Ahorcado {
+ public static void main(String []args){
+         String ahor1 = 
+         " +---+ \n"+
+         " |   | \n" +
+         "     | \n" +
+         "     | \n" +
+         "     | \n" +
+         "     | \n" +
+         " ========= ";
+         String ahor2 = 
+         " +---+ \n"+
+         " |   | \n"+
+         " O   | \n"+
+         "     | \n"+
+         "     | \n"+
+         "     | \n"+
+         "=========";
+
+         String ahor3 = 
+         " +---+ \n"+
+         " |   | \n"+
+         " O   | \n"+
+         " |   | \n"+
+         "     | \n"+
+         "     | \n"+
+         "=========";
+
+         String ahor4 = 
+         " +---+ \n"+
+         " |   | \n"+
+         " O   | \n"+
+         "/|   | \n"+
+         "     | \n"+
+         "     | \n"+
+         "=========";
+
+         String ahor5 = 
+         " +----+ \n"+
+         " |    | \n"+
+         " O    | \n"+
+         "/|\\   | \n"+
+         "      | \n"+
+         "      | \n"+
+         "=========";
+
+         String ahor6 = 
+         " +-----+ \n"+
+         " |     | \n"+
+         " O     | \n"+
+         "/|\\    | \n"+
+         "/      | \n"+
+         "       | \n"+
+         "=========";
+
+         String ahor7 = 
+         "  +----+ \n"+
+         "  |    | \n"+
+         "  O    | \n"+
+         " /|\\   | \n"+
+         " / \\   | \n"+
+         "       | \n"+
+         "=========";
+         // Arreglo de figuras del ahorcado
+         String [] figuras = {ahor1, ahor2, ahor3, ahor4, ahor5, ahor6, ahor7};
+         int contador = 0; // Cambiado a 0 para que el primer dibujo sea ahor1
+         String letra;
+         String [] palabras = {"programacion", "java", "indentacion", "clases", "objetos", "desarrollador", "pruebas"};
+         String palSecreta = getPalabraSecreta(palabras); // Obtener la palabra secreta
+         boolean[] letrasAdivinadas = new boolean[palSecreta.length()]; // Arreglo para letras adivinadas
+         int turnosRestantes = 6; // Número de turnos disponibles
+
+         System.out.println(figuras[contador]); // Muestra la figura inicial del ahorcado
+         mostrarBlancos(palSecreta); // Muestra los espacios en blanco correspondientes a la palabra secreta
+         System.out.println("\n");
+
+         // Bucle principal del juego
+         while(turnosRestantes > 0 && !palabraCompletada(letrasAdivinadas)) { // Mientras haya turnos y la palabra no esté completa
+             letra = ingreseLetra(); // Solicitamos la letra a ingresar al usuario
+             if (letraEnPalabraSecreta(letra, palSecreta)) { // Verificamos si la letra está en la palabra secreta
+                 mostrarBlancosActualizados(letra, palSecreta, letrasAdivinadas); // Mostramos como va el progreso
+             } else {
+                 contador++; // Incrementa el contador para mostrar la siguiente figura
+                 System.out.println(figuras[contador]); // Muestra la siguiente figura del ahorcado
+                 turnosRestantes--; // Disminuye los turnos restantes
+                 System.out.println("Turnos restantes: " + turnosRestantes); // Muestra turnos restantes
+             }
+             System.out.println("\n");
+         }
+
+         // Indicar si ganó o perdió
+         if (palabraCompletada(letrasAdivinadas)) { // Si se completó la palabra
+             System.out.println("¡Felicidades! Has adivinado la palabra: " + palSecreta);
+         } else {
+             System.out.println("¡Has perdido! La palabra era: " + palSecreta);
+         }
+         System.out.println("Fin del juego."); // Mensaje de fin de juego
+     }
+
+     public static String getPalabraSecreta(String [] lasPalabras) {
+         int ind = (int) (Math.random() * lasPalabras.length); // Se selecciona un índice aleatorio
+         return lasPalabras[ind]; // Devuelve la palabra seleccionada
+     }
+
+     public static void mostrarBlancos(String palabra) {
+         for(int i = 0; i < palabra.length(); i++) // Itera sobre cada carácter de la palabra
+             System.out.print("_ "); // Muestra un espacio en blanco por cada letra
+         System.out.println(); // Salto de línea al final
+     }
+
+     public static String ingreseLetra() {
+         String laLetra; // Almacena la letra ingresada
+         Scanner sc = new Scanner(System.in); // Inicializa el Scanner
+         System.out.print("Ingrese letra: "); // Solicita al usuario que ingrese una letra
+         laLetra = sc.next().toLowerCase(); // Lee la letra y la convierte a minúscula
+         // Valida que solo se ingrese una letra entre 'a' y 'z'
+         while(laLetra.length() != 1 || laLetra.charAt(0) < 'a' || laLetra.charAt(0) > 'z') {
+             System.out.print("Entrada inválida. Ingrese una letra: "); // Mensaje de error
+             laLetra = sc.next().toLowerCase(); // Lee nuevamente la letra
+         }
+         return laLetra; // Devuelve la letra ingresada
+     }
+
+     public static boolean letraEnPalabraSecreta(String letra, String palSecreta) {
+         return palSecreta.contains(letra); // Devuelve un "true" si la letra está en la palabra secreta
+     }
+
+     public static void mostrarBlancosActualizados(String letra, String palSecreta, boolean[] letrasAdivinadas) {
+         for (int i = 0; i < palSecreta.length(); i++) { // Itera sobre cada letra de la palabra secreta
+             if (palSecreta.charAt(i) == letra.charAt(0)) { // Si la letra coincide con la letra ingresada
+                 letrasAdivinadas[i] = true; // Marca la letra como adivinada
+             }
+         }
+         // Muestra el estado actual de la palabra
+         for (int i = 0; i < palSecreta.length(); i++) {
+             if (letrasAdivinadas[i]) {
+                 System.out.print(palSecreta.charAt(i) + " "); // Muestra la letra adivinada
+             } else {
+                 System.out.print("_ "); // Muestra un espacio en blanco si no ha sido adivinada
+             }
+         }
+         System.out.println(); // Salto de línea al final
+     }
+
+     public static boolean palabraCompletada(boolean[] letrasAdivinadas) {
+         for (boolean letraAdivinada : letrasAdivinadas) { // Verifica si todas las letras han sido adivinadas
+             if (!letraAdivinada) { // Si alguna letra no ha sido adivinada
+                 return false; // La palabra no está completa
+             }
+         }
+         return true; // Todas las letras han sido adivinadas
+     }
+ }
